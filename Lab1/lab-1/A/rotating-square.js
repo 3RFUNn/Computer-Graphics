@@ -7,7 +7,7 @@ const fs_file = './rotating-shape-frag.glsl';
 // rotation angle, step, and location in shader
 var theta = 0.0;
 // A0: CHANGE THE DEFAULT STEP VALUE
-var theta_step = 0.01;
+var theta_step = 0.0;
 var theta_loc;
 
 // buffers and attributes
@@ -24,8 +24,20 @@ function set_speed(obj)
     console.log('Selection is ' + selection);
 
     switch(selection) {
-        
-        // A0: ADD CODE HERE
+        case "pause":
+            theta_step = 0.0;
+            break;
+        case "slow":
+            theta_step = 0.005;
+            break;
+        case "medium":
+            theta_step = 0.01;
+            break;
+        case "fast":
+            theta_step = 0.02;
+            break;
+        default:
+            break;
 
     }
     console.log('Angle step is ' + theta_step);
@@ -64,9 +76,18 @@ window.onload = async function()
     vertices = [[0,1], [-1,0], [1,0], [0,-1]];
 
     // A5: MODIFY BELOW
+    indices = [
+        0, 1,
+        1, 2,
+        2, 3,
+        3, 0,
+        0, 2,
+        1, 3
+    ];
+
 
     // vertex indices for line drawing
-    indices = [0, 1];
+    //indices = [[0, 1]];
 
     // RGBA values
     colours = [
@@ -77,6 +98,11 @@ window.onload = async function()
     ];
 
     // A6: APPEND SIX BLACK VERTICES
+
+    for (let i = 0; i < 6; i++) {
+        colours.push([0.0, 0.0, 0.0, 1.0]);
+    }
+
 
     // --- geometry and colour setup ---
 
@@ -130,11 +156,35 @@ function render() {
 
     // A4 & A5: MODIFY BELOW
 
+    // connect vertex_colour attribute in shader to colour_buf
+
+     gl.vertexAttribPointer(colour_loc, 4, gl.FLOAT, false, 0, 0);
+     gl.enableVertexAttribArray(colour_loc);
+
+
+
     // draw triangle strip
+
     let num_strip_vertices = vertices.length;
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, num_strip_vertices);
 
+
+    // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+
+
+    let black_offset = vertices.length * 4 * 4;
+
+
+     gl.vertexAttribPointer(colour_loc, 4, gl.FLOAT, false, 0, black_offset);
+     gl.enableVertexAttribArray(colour_loc);
+     let num_line_vertices = indices.length;
+     gl.drawElements(gl.LINES, num_line_vertices, gl.UNSIGNED_SHORT, 0);
+
+
+
     // A6: ADD CODE HERE
+
+    
 
     // check if screen capture requested
     capture_canvas_check();
