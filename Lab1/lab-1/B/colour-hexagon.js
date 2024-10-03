@@ -46,16 +46,46 @@ window.onload = async function()
     indices = [];
     // B1: ADD CODE HERE
 
+
+    const num_vertices = 6;
+
+    // Generate vertices
+    for (let k = 0; k <= num_vertices; k++) {
+        let t = (k / num_vertices) * 2.0 * Math.PI;
+        let P = [Math.cos(t), Math.sin(t)];
+        vertices.push(P);
+    }
+
+    // Generate indices for gl.LINE_STRIP
+    for (let i = 0; i < num_vertices; i++) {
+        indices.push(i);
+    }
+    indices.push(0); // Close the hexagon by connecting the last vertex to the first
+
+
+
+
     // RGBA values for hexagon
     // B2: MODIFY THE COLOURS
+    // colours = [
+    //     [0.0, 0.0, 0.0, 1.0],
+    //     [0.0, 0.0, 0.0, 1.0],
+    //     [0.0, 0.0, 0.0, 1.0],
+    //     [0.0, 0.0, 0.0, 1.0],
+    //     [0.0, 0.0, 0.0, 1.0],
+    //     [0.0, 0.0, 0.0, 1.0],
+    //     [0.0, 0.0, 0.0, 1.0]
+    // ];
+
+    // Colours for each vertex
     colours = [
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 1.0]
+        [1.0, 0.0, 0.0, 1.0], // Red
+        [1.0, 1.0, 0.0, 1.0], // Yellow
+        [0.0, 1.0, 0.0, 1.0], // Green
+        [0.0, 1.0, 1.0, 1.0], // Cyan
+        [0.0, 0.0, 1.0, 1.0], // Blue
+        [1.0, 0.0, 1.0, 1.0], // Magenta
+        [1.0, 0.0, 0.0, 1.0]  // Red again to close the loop
     ];
 
     // --- geometry and colour setup ---
@@ -109,7 +139,9 @@ function render() {
     let num_line_vertices = indices.length;
     
     // B2: MODIFY CODE HERE
-    gl.drawElements(gl.LINE_STRIP, num_line_vertices, gl.UNSIGNED_SHORT, 0);
+    //gl.drawElements(gl.LINE_STRIP, num_line_vertices, gl.UNSIGNED_SHORT, 0);
+
+    gl.drawElements(gl.TRIANGLE_FAN, indices.length, gl.UNSIGNED_SHORT, 0);
 
     // check if screen capture requested
     capture_canvas_check();
