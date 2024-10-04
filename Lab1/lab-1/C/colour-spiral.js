@@ -10,7 +10,10 @@ const fs_file = './rotating-shape-frag.glsl';
 var vertices, indices, colours, vertices_colours;
 
 // C1,C2: MODIFY HERE
-var num_vertices = 6;
+
+// var num_vertices = 8;
+
+var num_vertices = 1000;
 
 function rgba_wheel(t)
 {
@@ -57,9 +60,33 @@ window.onload = async function()
 
     // data for attributes
     vertices = [];
+
     colours = [];
 
+    for (let i = 0; i < num_vertices+1 ; i++) {
+        colours.push([1.0, 0.0, 0.0, 1.0]);
+    }
+
+    
+    indices = [];
     // C1, C3, C4, C5: ADD CODE HERE
+
+
+     // Generate vertices
+     for (let k = 0; k <= num_vertices; k++) {
+      let t = (k / num_vertices) * 2.0 * Math.PI;
+      let P = [0.99 * Math.cos(t), 0.99 * Math.sin(t)];
+      vertices.push(P);
+  }
+
+  // Generate indices for gl.LINE_STRIP
+  for (let i = 0; i < num_vertices; i++) {
+      indices.push(i);
+  }
+  indices.push(0); // Close the octagon by connecting the last vertex to the first
+
+
+
 
     // D1 (OPTIONAL): MODIFY FOLLOWING CODE
 
