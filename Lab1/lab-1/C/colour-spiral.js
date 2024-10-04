@@ -80,11 +80,28 @@ window.onload = async function()
 //       vertices.push(P);
 //   }
 
+
+    function squircle(t, n) {
+        let x = Math.pow(Math.abs(Math.cos(t)), 2/n) * Math.sign(Math.cos(t));
+        let y = Math.pow(Math.abs(Math.sin(t)), 2/n) * Math.sign(Math.sin(t));
+        return [x, y];
+    }   
+
+
     for (let k = 0; k <= num_vertices; k++) {
         let s = k / num_vertices; // scale parameter from 0 to 1
         let t = (k / num_vertices) * 16.0 * 2.0 * Math.PI; // 16 cycles
-        let P = [0.99 * s * Math.cos(t), 0.99 * s * Math.sin(t)];
-        vertices.push(P);
+
+
+        //let P = [0.99 * s * Math.cos(t), 0.99 * s * Math.sin(t)];
+        //vertices.push(P);
+
+        // Use squircle function to generate vertex position
+        let P = squircle(t, 100); 
+        // Scale and apply the spiral effect
+        vertices.push([0.99 * s * P[0], 0.99 * s * P[1]]);
+
+        
 
 
         // Generate color using rgba_wheel
@@ -93,7 +110,7 @@ window.onload = async function()
 
     }
 
-    
+
   // Generate indices for gl.LINE_STRIP
   for (let i = 0; i < num_vertices; i++) {
       indices.push(i);
