@@ -63,22 +63,37 @@ window.onload = async function()
 
     colours = [];
 
-    for (let i = 0; i < num_vertices+1 ; i++) {
-        colours.push([1.0, 0.0, 0.0, 1.0]);
-    }
+    // for (let i = 0; i < num_vertices+1 ; i++) {
+    //     colours.push([1.0, 0.0, 0.0, 1.0]);
+    // }
 
     
+
     indices = [];
     // C1, C3, C4, C5: ADD CODE HERE
 
 
      // Generate vertices
-     for (let k = 0; k <= num_vertices; k++) {
-      let t = (k / num_vertices) * 2.0 * Math.PI;
-      let P = [0.99 * Math.cos(t), 0.99 * Math.sin(t)];
-      vertices.push(P);
-  }
+//      for (let k = 0; k <= num_vertices; k++) {
+//       let t = (k / num_vertices) * 2.0 * Math.PI;
+//       let P = [0.99 * Math.cos(t), 0.99 * Math.sin(t)];
+//       vertices.push(P);
+//   }
 
+    for (let k = 0; k <= num_vertices; k++) {
+        let s = k / num_vertices; // scale parameter from 0 to 1
+        let t = (k / num_vertices) * 16.0 * 2.0 * Math.PI; // 16 cycles
+        let P = [0.99 * s * Math.cos(t), 0.99 * s * Math.sin(t)];
+        vertices.push(P);
+
+
+        // Generate color using rgba_wheel
+        // We use t / 16 to get one full color cycle over the entire spiral
+        colours.push(rgba_wheel(t / 16));
+
+    }
+
+    
   // Generate indices for gl.LINE_STRIP
   for (let i = 0; i < num_vertices; i++) {
       indices.push(i);
