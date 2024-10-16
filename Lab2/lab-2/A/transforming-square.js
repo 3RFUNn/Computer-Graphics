@@ -10,6 +10,8 @@ var rotate_loc, pre_rotate_loc, pre_scale_loc, rgb_loc;
 
 // A2-5 ADD NEW DECLARATIONS 
 
+var translate_loc;
+
 // buffers and attributes
 var vertices, grid, indices;
 
@@ -76,6 +78,8 @@ window.onload = async function()
 
     // A2-5 GET NECESSARY UNIFORM LOCATIONS
 
+    translate_loc = gl.getUniformLocation(program, 'translate');
+
     // start drawing
     render();
 };
@@ -91,8 +95,26 @@ function render()
     let identity = mat_identity(4);
 
     // A1 -- DEFINE THESE TWO 4x4 MATRICES PROPERLY
-    let pre_scale = identity;
-    let pre_rotate = identity;
+
+    // let pre_scale = identity;
+    // let pre_rotate = identity;
+
+    // Pre-scale matrix: scaling by 1/2
+let pre_scale = [
+    [0.5, 0.0, 0.0, 0.0],
+    [0.0, 0.5, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+];
+
+// Pre-rotate matrix: rotating by pi/4 (45 degrees)
+let pre_rotate = [
+    [Math.cos(Math.PI / 4), -Math.sin(Math.PI / 4), 0.0, 0.0],
+    [Math.sin(Math.PI / 4), Math.cos(Math.PI / 4), 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]];
+
+
 
     // update the rotation angle
     theta += theta_step;
@@ -105,6 +127,7 @@ function render()
     let side = Math.sqrt(2)/2.0;
 
     // A2-5 DEFINE NEW MATRICES
+    
 
     // set all transformations
     gl.uniformMatrix4fv(pre_rotate_loc, false, mat_float_flat_transpose(pre_rotate));

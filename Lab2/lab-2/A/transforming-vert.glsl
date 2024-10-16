@@ -7,6 +7,8 @@ uniform vec3 rgb;
 
 // A2 -- DECLARE UNIFORM TRANSLATION MATRIX HERE
 
+uniform mat4 translate;
+
 // xy coordinates are attributes -- different for each vertex
 attribute vec4 vertex;
 
@@ -20,10 +22,18 @@ void main()
 
     // A3 -- DEFINE translate_inv HERE
 
+
     // A1 -- ADD CODE HERE
 
+    point =  pre_rotate * pre_scale * point;
+
     // A1, A2, A3, A4, A5 -- MODIFY HERE
-    gl_Position = point;
+    
+    point = point * translate;
+
+    gl_Position = rotate * point;
+
+    //gl_Position = point;
 
     // pass uniform colour to fragment shader varying
     // A5 -- MODIFY HERE
