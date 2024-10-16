@@ -127,6 +127,11 @@ let pre_rotate = [
     let side = Math.sqrt(2)/2.0;
 
     // A2-5 DEFINE NEW MATRICES
+
+    let translate = [[1, 0, 0, side/2],
+                     [0, 1, 0, side/2],
+                     [0, 0, 1, 0],
+                     [0, 0, 0, 1]];
     
 
     // set all transformations
@@ -134,7 +139,10 @@ let pre_rotate = [
     gl.uniformMatrix4fv(pre_scale_loc, false, mat_float_flat_transpose(pre_scale));
     gl.uniformMatrix4fv(rotate_loc, false, mat_float_flat_transpose(rotate));
 
+   
     // A2-5 SET NECESSARY TRANSFORMATION UNIFORMS
+
+    gl.uniformMatrix4fv(translate_loc, false, mat_float_flat_transpose(translate));
 
     // set red colour
     gl.uniform3fv(rgb_loc, [1,0,0]);
@@ -144,10 +152,15 @@ let pre_rotate = [
     // disable transformations before drawing grid, by setting them to the identity matrix
 
     // A2 DISABLE YOUR TRANSFORMATIONS 
+    
+    gl.uniformMatrix4fv(translate_loc, false, mat_float_flat_transpose(identity));
 
     gl.uniformMatrix4fv(pre_rotate_loc, false, mat_float_flat_transpose(identity));
     gl.uniformMatrix4fv(pre_scale_loc, false, mat_float_flat_transpose(identity));
     gl.uniformMatrix4fv(rotate_loc, false, mat_float_flat_transpose(identity));
+
+   
+
     // set black colour
     gl.uniform3fv(rgb_loc, [0,0,0]);
 

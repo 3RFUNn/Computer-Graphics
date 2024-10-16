@@ -22,16 +22,25 @@ void main()
 
     // A3 -- DEFINE translate_inv HERE
 
+    mat4 translate_inv = translate;
+
+   
+    translate_inv[3][0] = -translate[3][0];
+    translate_inv[3][1] = -translate[3][1];
+
+
 
     // A1 -- ADD CODE HERE
 
-    point =  pre_rotate * pre_scale * point;
+    point = pre_rotate * pre_scale * point;
 
     // A1, A2, A3, A4, A5 -- MODIFY HERE
-    
-    point = point * translate;
 
-    gl_Position = rotate * point;
+   // gl_Position = translate * rotate * point;
+
+   // gl_Position =  translate * translate_inv * point;
+
+   gl_Position =  translate * rotate * translate_inv * point;
 
     //gl_Position = point;
 
