@@ -16,7 +16,9 @@ var max_depth = 100;
 
 // B5 MODIFY CAMERA PARAMETERS
 let vert_fov = Math.PI/2;
-let near = 50;
+//let near = 50;
+//let near = 10;
+let near = 90;
 let far = 100;
 let aspect = 1;
 
