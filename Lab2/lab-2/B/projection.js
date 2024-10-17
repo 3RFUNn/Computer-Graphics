@@ -9,7 +9,8 @@ const UNSIGNED_SHORT_size = 2;
 var console_log = function() {};
 
 // B4 MODIFY SCENE PARAMETERS
-var num_triangles = 10;
+//var num_triangles = 10;
+var num_triangles = 1000;
 var tri_radius = 50;
 var max_depth = 100;
 
@@ -265,9 +266,42 @@ function render_control()
     render_side_edges = false;
     render();
 
+     
+
     // B1: INSERT CODE HERE
 
+    ctx.drawImage(gl.canvas, 0, 0);
+
     // B2: INSERT CODE HERE
+
+    // camera position for backed-off view (remember +z is behind camera)
+    let eye = [0.0, 0.0, 50.0];
+
+    // camera position for overhead view
+    eye = [110.0, 140.0, 70.0];
+
+    // target point and up direction of camera 
+    let at = [0.0, 0.0, -max_depth];
+    let up = [0.0, 1.0, 0.0];
+
+    // transformation to apply to scene
+    modelview = mat_lookat(eye,at,up);
+
+    // camera matrix with adjusted clipping planes (so that we see everything)
+    projection = mat_perspective(70, aspect, 1, 500);
+
+
+    // B2, B3, B4 -- MODIFY RENDERING CONTROL
+    render_triangles = false; 
+    render_near_plane = true;
+    render_far_plane = true;
+    render_side_planes = true;
+    render_near_edges = true;
+    render_far_edges = true;
+    render_side_edges = true;
+    render();
+
+    
 
     // check if screen capture requested
     capture_canvas_check();
@@ -275,6 +309,8 @@ function render_control()
     // C1: UPDATE ROTATION ANGLE AND SET ANIMATION CALLBACK
 
     // B1: INSERT CALLBACK CODE HERE
+
+    window.setTimeout(render_control, 1000/60);
 }
 
 
