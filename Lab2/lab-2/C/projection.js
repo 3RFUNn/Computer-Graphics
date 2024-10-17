@@ -10,15 +10,15 @@ var console_log = function() {};
 
 // B4 MODIFY SCENE PARAMETERS
 //var num_triangles = 10;
-var num_triangles = 1000;
+var num_triangles = 100;
 var tri_radius = 50;
 var max_depth = 100;
 
 // B5 MODIFY CAMERA PARAMETERS
 let vert_fov = Math.PI/2;
-//let near = 50;
+let near = 50;
 //let near = 10;
-let near = 90;
+//let near = 90;
 let far = 100;
 let aspect = 1;
 
@@ -41,6 +41,8 @@ var vertices, projection, modelview, rotation, translation;
 var vertex_loc, colour_loc, projection_loc, modelview_loc, rotation_loc, translation_loc;
 
 // C1: DECLARE translation_inv and translation_inv_loc here
+
+var translation_loc,translation_inv, translation_inv_loc, rotation_loc;
 
 // control flags
 var use_colour_loc, alpha_loc;
@@ -236,6 +238,10 @@ window.onload = async function()
 
     // C1: GET ROTATION AND TRANSLATION LOCATIONS HERE
 
+    translation_loc = gl.getUniformLocation(program, 'translation');
+    translation_inv_loc = gl.getUniformLocation(program, 'translation_inv');
+    rotation_loc = gl.getUniformLocation(program, 'rotation');
+
     // --- rendering options ---
 
     gl.enable(gl.DEPTH_TEST);
@@ -257,6 +263,32 @@ function render_control()
     modelview = mat_identity(4);
 
     // C1: DEFINE ROTATION AND TRANSLATION HERE
+
+    // Update the rotation angle
+    theta += theta_step;
+
+    // Define the translation matrices
+    translation = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, max_depth / 2],
+        [0, 0, 0, 1]
+    ];
+
+    translation_inv = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, -max_depth / 2],
+        [0, 0, 0, 1]
+    ];
+
+    // Define the rotation matrix around the y-axis
+    rotation = [
+        [Math.cos(theta), 0, Math.sin(theta), 0],
+        [0, 1, 0, 0],
+        [-Math.sin(theta), 0, Math.cos(theta), 0],
+        [0, 0, 0, 1]
+    ];
 
     // HIDE FRUSTUM ON FIRST RENDER
     render_triangles = true;
@@ -294,7 +326,7 @@ function render_control()
 
 
     // B2, B3, B4 -- MODIFY RENDERING CONTROL
-    render_triangles = false; 
+    render_triangles = true; 
     render_near_plane = true;
     render_far_plane = true;
     render_side_planes = true;
@@ -309,6 +341,7 @@ function render_control()
     capture_canvas_check();
 
     // C1: UPDATE ROTATION ANGLE AND SET ANIMATION CALLBACK
+
 
     // B1: INSERT CALLBACK CODE HERE
 
@@ -329,6 +362,10 @@ function render()
     
     // C1: SET ROTATION AND TRANSLATION HERE
 
+    gl.uniformMatrix4fv(translation_loc, false, mat_float_flat_transpose(translation));
+    gl.uniformMatrix4fv(translation_inv_loc, false, mat_float_flat_transpose(translation_inv));
+    gl.uniformMatrix4fv(rotation_loc, false, mat_float_flat_transpose(rotation));
+
     // enable colour in shader
     gl.uniform1i(use_colour_loc, true);
 
@@ -339,6 +376,11 @@ function render()
     }
 
     // C1: DISABLE ROTATION AND TRANSLATION HERE
+
+    let identity = mat_identity(4);
+    gl.uniformMatrix4fv(translation_loc, false, mat_float_flat_transpose(identity));
+    gl.uniformMatrix4fv(translation_inv_loc, false, mat_float_flat_transpose(identity));
+    gl.uniformMatrix4fv(rotation_loc, false, mat_float_flat_transpose(identity));    
 
     if(render_near_plane || render_far_plane || render_side_edges)
         console_log('Drawing frustum...');
