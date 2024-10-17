@@ -9,6 +9,8 @@ uniform vec3 rgb;
 
 uniform mat4 translate;
 
+uniform mat4 projective_inv;    
+
 // xy coordinates are attributes -- different for each vertex
 attribute vec4 vertex;
 
@@ -36,15 +38,25 @@ void main()
 
     // A1, A2, A3, A4, A5 -- MODIFY HERE
 
-   // gl_Position = translate * rotate * point;
+    // gl_Position = translate * rotate * point;
 
-   // gl_Position =  translate * translate_inv * point;
+    // gl_Position =  translate * translate_inv * point;
 
-   gl_Position =  translate * rotate * translate_inv * point;
+    //gl_Position =  translate * rotate * translate_inv * point;
+
+    //gl_Position = shear * point;
+
+    //gl_Position = projective * point;
+
+    gl_Position =  projective_inv * projective * point;
 
     //gl_Position = point;
 
     // pass uniform colour to fragment shader varying
     // A5 -- MODIFY HERE
-    colour = vec4(rgb, 1.0);
+
+     colour = vec4(gl_Position.w, 0.0, 0.0, 1.0);
+
+    //colour = vec4(rgb, 1.0);
+
 }

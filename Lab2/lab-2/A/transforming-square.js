@@ -12,6 +12,13 @@ var rotate_loc, pre_rotate_loc, pre_scale_loc, rgb_loc;
 
 var translate_loc;
 
+var shear_loc;
+
+var projective_loc;
+
+var projective_inv_loc;
+
+
 // buffers and attributes
 var vertices, grid, indices;
 
@@ -80,6 +87,13 @@ window.onload = async function()
 
     translate_loc = gl.getUniformLocation(program, 'translate');
 
+    shear_loc = gl.getUniformLocation(program, 'shear');
+
+    projective_loc = gl.getUniformLocation(program, 'projective');
+
+    projective_inv_loc = gl.getUniformLocation(program, 'projective_inv');
+
+
     // start drawing
     render();
 };
@@ -132,6 +146,27 @@ let pre_rotate = [
                      [0, 1, 0, side/2],
                      [0, 0, 1, 0],
                      [0, 0, 0, 1]];
+
+    
+    let shear = [[1, Math.tan(theta), 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]];
+
+    
+    let projective = [[4/(2+side), 0, 0, 0],
+                [0, 1, 0, ((side-2)*side)/(2*(side+2))],
+                [0, 0, 1, 0],
+                [0, (2*(side-2))/(side*(side+2)), 0, 1]];
+
+                
+    let projective_inv = [[2+side, 0, 0, 0], 
+            [0, Math.pow(2+side,2)/(2*side), 0, 1-Math.pow(side,2)/4],
+            [0, 0, 4, 0],
+            [0, 4/Math.pow(side,2)-1, 0,  Math.pow(2+side,2)/(2*side)]];
+
+    
+    
     
 
     // set all transformations
@@ -143,6 +178,13 @@ let pre_rotate = [
     // A2-5 SET NECESSARY TRANSFORMATION UNIFORMS
 
     gl.uniformMatrix4fv(translate_loc, false, mat_float_flat_transpose(translate));
+
+    gl.uniformMatrix4fv(shear_loc, false, mat_float_flat_transpose(shear));
+
+    gl.uniformMatrix4fv(projective_loc, false, mat_float_flat_transpose(projective));
+
+    gl.uniformMatrix4fv(projective_inv_loc, false, mat_float_flat_transpose(projective_inv));
+
 
     // set red colour
     gl.uniform3fv(rgb_loc, [1,0,0]);
@@ -158,6 +200,14 @@ let pre_rotate = [
     gl.uniformMatrix4fv(pre_rotate_loc, false, mat_float_flat_transpose(identity));
     gl.uniformMatrix4fv(pre_scale_loc, false, mat_float_flat_transpose(identity));
     gl.uniformMatrix4fv(rotate_loc, false, mat_float_flat_transpose(identity));
+
+    gl.uniformMatrix4fv(shear_loc, false, mat_float_flat_transpose(identity));
+
+    gl.uniformMatrix4fv(projective_loc, false, mat_float_flat_transpose(identity));
+
+    gl.uniformMatrix4fv(projective_inv_loc, false, mat_float_flat_transpose(identity));
+
+    
 
    
 
