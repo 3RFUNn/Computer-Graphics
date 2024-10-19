@@ -6,7 +6,11 @@ const FLOAT_size = 4;
 const UNSIGNED_SHORT_size = 2;
 
 // set this to console.log for verbose debugging
-var console_log = function() {};
+var console_log = function() {
+
+    //testPerspectiveMatrixDirect();
+
+};
 
 // B4 MODIFY SCENE PARAMETERS
 //var num_triangles = 10;

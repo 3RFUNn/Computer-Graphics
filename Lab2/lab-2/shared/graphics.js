@@ -202,6 +202,64 @@ function mat_perspective(fovy, aspect, near, far)
    return cam;
 }
 
+
+function mat_perspective_alt(right, top, near, far) {
+   // Calculate the aspect ratio
+   let aspect = right / top;
+   
+   // Calculate the vertical field of view (fovy) in radians
+   let fovy_rad = 2 * Math.atan(top / near);
+   
+   // Convert fovy from radians to degrees
+   let fovy_deg = fovy_rad * (180 / Math.PI);
+   
+   // Call the original mat_perspective function with fovy, aspect, near, and far
+   return mat_perspective(fovy_deg, aspect, near, far);
+}
+
+function mat_perspective_alt_direct(right, top, near, far) {
+   // Create matrix N
+   let N = mat_zero(4, 4);
+   N[0][0] = 1;
+   N[1][1] = 1;
+   N[2][2] = -(far + near) / (far - near);
+   N[2][3] = -2 * far * near / (far - near);
+   N[3][2] = -1;
+
+   // Create matrix S
+   let S = mat_zero(4, 4);
+   S[0][0] = near / right;
+   S[1][1] = near / top;
+   S[2][2] = 1;
+   S[3][3] = 1;
+
+   // Multiply N and S to get the final perspective matrix
+   return mat_prod(N, S);
+}
+
+// Test function to compare results
+function testPerspectiveMatrixDirect() {
+   // Test values
+   let right = 1, top = 1, near = 1, far = 10;
+   
+   // Calculate using our new direct function
+   let directMatrix = mat_perspective_alt_direct(right, top, near, far);
+   
+   console.log("Perspective matrix using mat_perspective_alt_direct:");
+   mat_console_log(directMatrix);
+   
+   // Compare with the original function
+   let fovy = 2 * Math.atan(top / near) * (180 / Math.PI);
+   let aspect = right / top;
+   let originalMatrix = mat_perspective_alt(fovy, aspect, near, far);
+   
+   console.log("Perspective matrix using original mat_perspective_alt:");
+   mat_console_log(originalMatrix);
+}
+
+
+
+
 function mat_lookat(eye, at, up)
 {
 	// Construct the standard modelview matrix.
