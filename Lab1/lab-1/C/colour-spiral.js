@@ -89,24 +89,31 @@ window.onload = async function()
 
 
     for (let k = 0; k <= num_vertices; k++) {
+        let cycles = 16; // 16 cycles for the spiral
         let s = k / num_vertices; // scale parameter from 0 to 1
-        let t = (k / num_vertices) * 16.0 * 2.0 * Math.PI; // 16 cycles
+        let angle = cycles * 2 * Math.PI * s;   // Angle increases faster for spiral
+        let t = cycles * 2.0 * Math.PI * s; // 16 cycles
 
 
-        //let P = [0.99 * s * Math.cos(t), 0.99 * s * Math.sin(t)];
-        //vertices.push(P);
+        let x = 0.99 * s * Math.cos(t);
+        let y = 0.99 * s * Math.sin(t);
+        //vertices.push(x,y);
 
         // Use squircle function to generate vertex position
         let P = squircle(t, 100); 
         // Scale and apply the spiral effect
         vertices.push([0.99 * s * P[0], 0.99 * s * P[1]]);
 
+
+        /**
+         * Generates a color based on the given angle using the RGBA color wheel.
+         *
+         * @param {number} angle - The angle in degrees used to determine the color.
+         * @returns {string} The RGBA color string corresponding to the given angle.
+         */
         
-
-
-        // Generate color using rgba_wheel
-        // We use t / 16 to get one full color cycle over the entire spiral
-        colours.push(rgba_wheel(t / 16));
+        let color = rgba_wheel(angle);
+        colours.push(...color);
 
     }
 
