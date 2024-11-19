@@ -16,7 +16,7 @@ uniform struct {
 // clipping plane depths
 uniform float near, far;
 
-// normal, source and taget -- interpolated across all triangles
+// normal, source and target -- interpolated across all triangles
 varying vec3 m, s, t;
 
 void main()
@@ -36,10 +36,13 @@ void main()
                    max(dot(s,n),0.0) * 
                    light.diffuse;
 
-    // B1 -- IMPLEMENT SPECULAR TERM
+    // B1 -- Implement specular term
+    vec4 specular = material.specular * 
+                    pow(max(dot(r,t),0.0), material.shininess) *
+                    light.specular;
 
     // B3 -- IMPLEMENT BLINN SPECULAR TERM
 
-    gl_FragColor = vec4((ambient + diffuse).rgb, 1.0);
+    // Output final color including ambient, diffuse and specular components
+    gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
 }
-
