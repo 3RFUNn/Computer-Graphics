@@ -24,7 +24,11 @@ var material = {
 };
 
 // A2 -- CHANGE THIS
-var num_models = 1;
+
+//var num_models = 1;
+
+// Increase the number of models to 50
+var num_models = 50;
 
 // modelview parameters
 var transform = [];
@@ -153,15 +157,40 @@ async function render()
         // A1, A2 -- MODIFY HERE 
 
         // average scene depth
-        let z = (far + near)/2;
+        let z = (far + near) / 2;
 
-        // 4x4 rigid motion
-        let motion = mat_motion(theta, [0,1,0], [0,0,-z]);
 
-        // uniform scaling
-        let scaling = mat_scaling([1,1,1]);
+        let scale = transform[k].scale;
+        let location = transform[k].location;
+        let axis = transform[k].axis;
+
+        let scaling = mat_scaling(scale);
+        let motion = mat_motion(theta, axis, location);
 
         modelview = mat_prod(motion, scaling);
+        
+        // // scaling magnified by factor of 12
+        // let scaling = mat_scaling(vec_scale(12, [1, 1, 1]));
+        
+        // // fixed rotation of 90 degrees around x-axis
+        // let fixed_rotation = mat_motion(Math.PI / 2, [1, 0, 0], [0, 0, 0]);
+        
+        // // variable rotation around y-axis
+        // let motion = mat_motion(theta, [0, 1, 0], [0, 0, -z]);
+        
+        // rearranged modelview matrix
+        //modelview = mat_prod(motion, mat_prod(fixed_rotation, scaling));
+
+        // // average scene depth
+        // let z = (far + near)/2;
+
+        // // 4x4 rigid motion
+        // let motion = mat_motion(theta, [0,1,0], [0,0,-z]);
+
+        // // uniform scaling
+        // let scaling = mat_scaling([1,1,1]);
+
+        // modelview = mat_prod(motion, scaling);
 
         gl.uniformMatrix4fv(modelview_loc, false, mat_float_flat_transpose(modelview));
         gl.drawElements(gl.TRIANGLES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
