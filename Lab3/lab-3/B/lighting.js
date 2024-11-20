@@ -34,7 +34,7 @@ let vert_fov_deg = 20.0;
 let near = 7.0;
 let far = 12.0;
 let aspect = 1;
-var theta = 0.0;
+var theta = Math.PI;
 
 // buffers and attributes
 var projection, modelview, animate = false;

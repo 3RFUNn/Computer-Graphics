@@ -24,11 +24,10 @@ void main()
     // renormalize interpolated normal
     vec3 n = normalize(m);
 
-    // reflection vector
-    vec3 r = -normalize(reflect(s,n));
+    // compute halfway vector instead of reflection vector
+    vec3 h = normalize(s + t);
 
     // phong shading components
-
     vec4 ambient = material.ambient * 
                    light.ambient;
 
@@ -36,12 +35,10 @@ void main()
                    max(dot(s,n),0.0) * 
                    light.diffuse;
 
-    // B1 -- Implement specular term
+    // B3 -- Blinn specular term implementation
     vec4 specular = material.specular * 
-                    pow(max(dot(r,t),0.0), material.shininess) *
+                    pow(max(dot(h,n),0.0), material.shininess * 4.0) *
                     light.specular;
-
-    // B3 -- IMPLEMENT BLINN SPECULAR TERM
 
     // Output final color including ambient, diffuse and specular components
     gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
