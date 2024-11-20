@@ -1,8 +1,8 @@
 // ECS610U -- Miles Hansard 2021
 'use strict';
 var mesh, canvas, gl;
-const vs_file = './lighting-vert.glsl';
-const fs_file = './lighting-frag.glsl';
+const vs_file = './lighting-vert-pv.glsl';
+const fs_file = './lighting-frag-pv.glsl';
 
 // illuminant properties
 // B2 -- MODIFY
