@@ -67,6 +67,9 @@ async function init(meshes)
     let vs = webgl_make_shader(gl, vs_src, gl.VERTEX_SHADER);
     let fs = webgl_make_shader(gl, fs_src, gl.FRAGMENT_SHADER);
     let program = webgl_make_program(gl, vs, fs);
+
+    let time_loc = gl.getUniformLocation(program, 'time');
+
     gl.useProgram(program);
 
     vertex_loc = gl.getAttribLocation(program, 'vertex');
@@ -74,6 +77,9 @@ async function init(meshes)
 
     normal_loc = gl.getAttribLocation(program, 'normal');
     gl.enableVertexAttribArray(normal_loc);
+
+    
+
 
     // // // Add random noise to the mesh vertices
     // for(let i = 0; i < mesh.vertices.length; i++) {
@@ -174,6 +180,8 @@ async function render()
         modelview = mat_prod(motion, scaling);
 
         gl.uniformMatrix4fv(modelview_loc, false, mat_float_flat_transpose(modelview));
+
+        
         gl.drawElements(gl.TRIANGLES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     }
 
