@@ -19,30 +19,7 @@ uniform float near, far;
 // normal, source and target -- interpolated across all triangles
 varying vec3 m, s, t;
 
-// void main()
-// {   
-//     // renormalize interpolated normal
-//     vec3 n = normalize(m);
 
-//     // compute halfway vector instead of reflection vector
-//     vec3 h = normalize(s + t);
-
-//     // phong shading components
-//     vec4 ambient = material.ambient * 
-//                    light.ambient;
-
-//     vec4 diffuse = material.diffuse * 
-//                    max(dot(s,n),0.0) * 
-//                    light.diffuse;
-
-//     // B3 -- Blinn specular term implementation
-//     vec4 specular = material.specular * 
-//                     pow(max(dot(h,n),0.0), material.shininess * 4.0) *
-//                     light.specular;
-
-//     // Output final color including ambient, diffuse and specular components
-//     gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
-// }
 
 void main()
 {   
@@ -62,11 +39,17 @@ void main()
                    light.diffuse;
 
     // B1 -- Implement specular term
+
     vec4 specular = material.specular * 
                     pow(max(dot(r,t),0.0), material.shininess) *
                     light.specular;
 
-    // B3 -- IMPLEMENT BLINN SPECULAR TERM
+    
+    // vec4 specular = material.specular * 
+    //             pow(abs(dot(r, t)), material.shininess) * 
+    //             light.specular;
+
+    
 
     // Output final color including ambient, diffuse and specular components
     gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
