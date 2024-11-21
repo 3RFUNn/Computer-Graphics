@@ -46,31 +46,28 @@ varying vec3 m, s, t;
 
 void main()
 {   
-    if(gl_FragCoord.z < 0.5) {
-        // don't render close fragments
-        discard;
-    }
-
     // renormalize interpolated normal
     vec3 n = normalize(m);
 
     // reflection vector
-    vec3 r = -normalize(reflect(s, n));
+    vec3 r = -normalize(reflect(s,n));
 
-    // Phong shading components
-    vec4 ambient = material.ambient * light.ambient * 0.0;
+    // phong shading components
+
+    vec4 ambient = material.ambient * 
+                   light.ambient;
 
     vec4 diffuse = material.diffuse * 
-                   max(dot(s, n), 0.0) * 
+                   max(dot(s,n),0.0) * 
                    light.diffuse;
 
     // B1 -- Implement specular term
     vec4 specular = material.specular * 
-                    pow(max(dot(r, t), 0.0), material.shininess) *
+                    pow(max(dot(r,t),0.0), material.shininess) *
                     light.specular;
 
     // B3 -- IMPLEMENT BLINN SPECULAR TERM
 
-    // Output final color including ambient, diffuse, and specular components
+    // Output final color including ambient, diffuse and specular components
     gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
 }
