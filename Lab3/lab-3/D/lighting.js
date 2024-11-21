@@ -75,6 +75,16 @@ async function init(meshes)
     normal_loc = gl.getAttribLocation(program, 'normal');
     gl.enableVertexAttribArray(normal_loc);
 
+    // // // Add random noise to the mesh vertices
+    // for(let i = 0; i < mesh.vertices.length; i++) {
+    //     mesh.vertices[i] += 0.1 * random(-1, 1);
+    // }
+
+    // // Add random noise to the mesh vertex normals
+    // for(let i = 0; i < mesh.vertexNormals.length; i++) {
+    //     mesh.vertexNormals[i] += 0.15 * random(-1, 1);
+    // }
+
     // gl buffers will be created automatically by shared/webgl-obj-loader.js 
     OBJ.initMeshBuffers(gl, mesh);
 
