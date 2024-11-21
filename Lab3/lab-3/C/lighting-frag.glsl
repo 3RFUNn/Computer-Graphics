@@ -19,23 +19,55 @@ uniform float near, far;
 // normal, source and target -- interpolated across all triangles
 varying vec3 m, s, t;
 
-// Function to convert fragment depth to scene depth
-float scene_depth(float frag_z)
-{
-    float ndc_z = 2.0*frag_z - 1.0;
-    return (2.0*near*far) / (far + near - ndc_z*(far-near));
-}
+// void main()
+// {   
+//     // renormalize interpolated normal
+//     vec3 n = normalize(m);
+
+//     // compute halfway vector instead of reflection vector
+//     vec3 h = normalize(s + t);
+
+//     // phong shading components
+//     vec4 ambient = material.ambient * 
+//                    light.ambient;
+
+//     vec4 diffuse = material.diffuse * 
+//                    max(dot(s,n),0.0) * 
+//                    light.diffuse;
+
+//     // B3 -- Blinn specular term implementation
+//     vec4 specular = material.specular * 
+//                     pow(max(dot(h,n),0.0), material.shininess * 4.0) *
+//                     light.specular;
+
+//     // Output final color including ambient, diffuse and specular components
+//     gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
+// }
 
 void main()
 {   
-    // Get the scene depth from gl_FragCoord.z
-    float z = scene_depth(gl_FragCoord.z);
-    
-    // Linear transformation to map depth to color intensity
-    // When z = near, result should be 1.0 (white)
-    // When z = far, result should be 0.0 (black)
-    float intensity = (far - z) / (far - near);
-    
-    // Output final color based on depth
-    gl_FragColor = vec4(vec3(intensity), 1.0);
+    // renormalize interpolated normal
+    vec3 n = normalize(m);
+
+    // reflection vector
+    vec3 r = -normalize(reflect(s,n));
+
+    // phong shading components
+
+    vec4 ambient = material.ambient * 
+                   light.ambient;
+
+    vec4 diffuse = material.diffuse * 
+                   max(dot(s,n),0.0) * 
+                   light.diffuse;
+
+    // B1 -- Implement specular term
+    vec4 specular = material.specular * 
+                    pow(max(dot(r,t),0.0), material.shininess) *
+                    light.specular;
+
+    // B3 -- IMPLEMENT BLINN SPECULAR TERM
+
+    // Output final color including ambient, diffuse and specular components
+    gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
 }

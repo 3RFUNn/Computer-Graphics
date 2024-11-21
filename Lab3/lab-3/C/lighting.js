@@ -114,7 +114,7 @@ async function init(meshes)
     // --- rendering setup ---
 
     gl.viewport(0, 0, canvas.width, aspect*canvas.height);
-    gl.clearColor(86/255, 190/255, 191/255, 1.0);
+    gl.clearColor(0.75, 0.75, 0.75, 1.0);
     gl.lineWidth(1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
