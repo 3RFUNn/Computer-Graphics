@@ -19,31 +19,6 @@ uniform float near, far;
 // normal, source and target -- interpolated across all triangles
 varying vec3 m, s, t;
 
-// void main()
-// {   
-//     // renormalize interpolated normal
-//     vec3 n = normalize(m);
-
-//     // compute halfway vector instead of reflection vector
-//     vec3 h = normalize(s + t);
-
-//     // phong shading components
-//     vec4 ambient = material.ambient * 
-//                    light.ambient;
-
-//     vec4 diffuse = material.diffuse * 
-//                    max(dot(s,n),0.0) * 
-//                    light.diffuse;
-
-//     // B3 -- Blinn specular term implementation
-//     vec4 specular = material.specular * 
-//                     pow(max(dot(h,n),0.0), material.shininess * 4.0) *
-//                     light.specular;
-
-//     // Output final color including ambient, diffuse and specular components
-//     gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
-// }
-
 void main()
 {   
     // renormalize interpolated normal
@@ -52,22 +27,25 @@ void main()
     // reflection vector
     vec3 r = -normalize(reflect(s,n));
 
-    // phong shading components
+    // Initialize base color with ambient and diffuse
+    vec3 fragment_rgb = material.ambient.rgb + material.diffuse.rgb;
+    
+    // Get the dot product between light source and normal
+    float light_normal_dot = dot(s,n);
+    
+    // Add specular based on light angle thresholds
+    if (light_normal_dot > 0.9) {
+        fragment_rgb += material.specular.rgb;
+    } else if (light_normal_dot > 0.75) {
+        fragment_rgb += 0.2 * material.specular.rgb;
+    }
+    
+    // Check view angle for outline effect
+    float view_normal_dot = dot(t,n);
+    if (view_normal_dot < 0.4) {
+        fragment_rgb = 0.3 * material.diffuse.rgb;
+    }
 
-    vec4 ambient = material.ambient * 
-                   light.ambient;
-
-    vec4 diffuse = material.diffuse * 
-                   max(dot(s,n),0.0) * 
-                   light.diffuse;
-
-    // B1 -- Implement specular term
-    vec4 specular = material.specular * 
-                    pow(max(dot(r,t),0.0), material.shininess) *
-                    light.specular;
-
-    // B3 -- IMPLEMENT BLINN SPECULAR TERM
-
-    // Output final color including ambient, diffuse and specular components
-    gl_FragColor = vec4((ambient + diffuse + specular).rgb, 1.0);
+    // Set final color
+    gl_FragColor = vec4(fragment_rgb, 1.0);
 }
