@@ -258,9 +258,11 @@ async function render()
     gl.uniformMatrix4fv(modelview_loc, false, mat_float_flat_transpose(view));
     gl.uniformMatrix4fv(view_inv_loc, false, mat_float_flat_transpose(view_inv));
 
+
     gl.enable(gl.DEPTH_TEST);
+    //gl.disable(gl.DEPTH_TEST);
     // B1 -- UNCOMMENT THIS
-    // render_skybox();
+     render_skybox();
 
     // --- render object ---
 
