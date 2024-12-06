@@ -25,8 +25,9 @@ void main()
     }
     else {
 
-        // object colour
-        vec4 material_colour = texture2D(texture,map);
+        // // object colour
+        // vec4 material_colour = texture2D(texture, map);
+        // material_colour.rgb = vec3(1.0) - material_colour.rgb;
 
         // sources and target directions 
         vec3 s = normalize(q.xyz - p.xyz);
