@@ -50,10 +50,15 @@ void main()
         // combined colour
         if(render_texture) {
             // B2 -- MODIFY
-            gl_FragColor = vec4((0.5 * ambient + 
+            // gl_FragColor = vec4((0.5 * ambient + 
+            //                      0.5 * diffuse + 
+            //                      0.01 * specular + 
+            //                      0.0 * reflection_colour).rgb, 1.0);
+
+             gl_FragColor = vec4((0.5 * ambient + 
                                  0.5 * diffuse + 
                                  0.01 * specular + 
-                                 0.0 * reflection_colour).rgb, 1.0);
+                                 0.1 * reflection_colour).rgb, 1.0);
         }
         else {
             // reflection only 
