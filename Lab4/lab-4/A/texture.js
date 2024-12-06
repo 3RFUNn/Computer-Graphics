@@ -65,9 +65,17 @@ function setup_texture(image)
     gl.generateMipmap(gl.TEXTURE_2D);
 
     // A3 -- MODIFY THESE
+
+
     // interpolation method for shrinking and enlarging the texture, respectively:
+
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
 }
 
 async function setup(meshes)
@@ -160,8 +168,11 @@ async function setup(meshes)
     var texture_img = new Image();
     texture_img.crossOrigin = 'anonymous';
     // A3 -- CHANGE THIS
+
     // set texture file
     texture_img.src = model_path + model_name + '/texture.png';
+
+    //texture_img.src = '../shared/models/stripes/stripes-1024.png';
 
     texture_img.onload = function() {
         // trigger setup as soon as the image loads

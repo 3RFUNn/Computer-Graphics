@@ -46,9 +46,9 @@ void main()
     // A1-A2 -- CHANGE THIS
     // combined colour
 
-     gl_FragColor = vec4(map.s, map.t, 0.0, 1.0);
+    //gl_FragColor = vec4(map.s, map.t, 0.0, 1.0);
 
-    //gl_FragColor = vec4((0.5*ambient + diffuse + 0.01*specular).rgb, 1.0);
+    gl_FragColor = vec4((0.5*ambient + diffuse + 0.01*specular).rgb, 1.0);
 
     //gl_FragColor = texture2D(texture,map);
 }
