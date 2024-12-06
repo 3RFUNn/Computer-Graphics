@@ -16,6 +16,28 @@ varying vec2 map;
 varying vec3 d, m;
 varying vec4 p, q;
 
+
+
+float vignette(vec2 coord, vec2 resolution) {
+
+    
+  // Calculate the distance of the fragment from the center of the image
+  vec2 center = resolution / 2.0;
+  float dist = distance(coord, center);
+
+
+  float vignetteFactor = 1.0 - dist / length(resolution);
+  vignetteFactor = clamp(vignetteFactor, 0.6, 0.95);
+  return vignetteFactor;
+}
+
+
+vec4 gamma_transform(vec4 colour, float gamma)
+{
+    return vec4(pow(colour.rgb, vec3(gamma)), colour.a);
+}
+
+
 void main()
 { 
     vec3 n = normalize(m);
@@ -24,10 +46,23 @@ void main()
         gl_FragColor = textureCube(cubemap,vec3(-d.x,d.y,d.z));
     }
     else {
+        // // Discard backwards-facing fragments
+        // if(!gl_FrontFacing) {
+        //     discard;
+        // }
 
-        // // object colour
-        // vec4 material_colour = texture2D(texture, map);
-        // material_colour.rgb = vec3(1.0) - material_colour.rgb;
+        // object colour
+        vec4 material_colour = texture2D(texture, map);
+
+        // Measure darkness
+        float darkness = length(material_colour.rgb);
+
+        // // Set alpha based on darkness
+        // if (darkness < 0.5) { // Adjust the threshold as needed
+        //     material_colour.a = 0.0; // Fully transparent
+        // } else {
+        //     material_colour.a = 1.0; // Fully opaque
+        // }
 
         // sources and target directions 
         vec3 s = normalize(q.xyz - p.xyz);
@@ -50,21 +85,21 @@ void main()
 
         // combined colour
         if(render_texture) {
-            // B2 -- MODIFY
-            // gl_FragColor = vec4((0.5 * ambient + 
-            //                      0.5 * diffuse + 
-            //                      0.01 * specular + 
-            //                      0.0 * reflection_colour).rgb, 1.0);
-
-             gl_FragColor = vec4((0.5 * ambient + 
+            gl_FragColor = vec4((0.5 * ambient + 
                                  0.5 * diffuse + 
                                  0.01 * specular + 
-                                 0.1 * reflection_colour).rgb, 1.0);
+                                 0.1 * reflection_colour).rgb, material_colour.a);
         }
         else {
             // reflection only 
             gl_FragColor = reflection_colour;
         }
+
+
+        // if(gl_FragCoord.x > 425.0) {
+
+        //     gl_FragColor = gamma_transform(material_colour+reflection_colour*0.1,2.0);   
+        // }
 
     }
 }
