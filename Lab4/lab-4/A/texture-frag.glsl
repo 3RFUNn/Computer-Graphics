@@ -25,7 +25,10 @@ void main()
 { 
     // A1 -- CHANGE THIS
     // uniform grey
-    vec4 material_colour = vec4(vec3(0.9),1.0);
+
+    vec4 material_colour = texture2D(texture,map);
+
+    //vec4 material_colour = vec4(vec3(0.9),1.0);
 
     // source and target directions 
     vec3 s = normalize(q.xyz - p.xyz);
@@ -42,5 +45,10 @@ void main()
 
     // A1-A2 -- CHANGE THIS
     // combined colour
-    gl_FragColor = vec4((0.5*ambient + diffuse + 0.01*specular).rgb, 1.0);
+
+     gl_FragColor = vec4(map.s, map.t, 0.0, 1.0);
+
+    //gl_FragColor = vec4((0.5*ambient + diffuse + 0.01*specular).rgb, 1.0);
+
+    //gl_FragColor = texture2D(texture,map);
 }
