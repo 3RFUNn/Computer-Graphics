@@ -6,7 +6,7 @@ const fs_file = './texture-frag.glsl';
 
 // A4 -- MODIFY THIS
 // model parameters
-let model_name = 'spot';
+let model_name = 'banana-big';
 let model_path = '../shared/models/';
 
 let light = {
@@ -34,7 +34,8 @@ let projection, animate = false;
 
 // A4 -- MODIFY THIS
 // modelview parameters
-let scaling = 1.0;
+//let scaling = 1.0;
+let scaling = 10.0;
 let translation_x = 0.0;
 let translation_y = 0.0;
 let translation_z = 5.0;
