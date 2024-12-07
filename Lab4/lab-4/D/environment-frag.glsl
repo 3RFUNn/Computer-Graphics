@@ -13,6 +13,8 @@ uniform samplerCube cubemap;
 uniform sampler2D texture;
 
 
+uniform bool wireframe_mode;
+
 uniform vec2 screenSize;
 
 varying vec2 map;
@@ -41,16 +43,21 @@ vec4 gamma_transform(vec4 colour, float gamma)
 
 void main()
 { 
-    vec3 n = normalize(m);
-
     if(render_skybox) {
         gl_FragColor = textureCube(cubemap,vec3(-d.x,d.y,d.z));
     }
     else {
-        // // Discard backwards-facing fragments
-        // if(!gl_FrontFacing) {
-        //     discard;
-        // }
+        // Check wireframe mode first
+        if(wireframe_mode) {
+            gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
+            // Apply vignette and return early
+            vec2 resolution = vec2(850,850);
+            gl_FragColor.rgb *= vignette(gl_FragCoord.xy, resolution);
+            return;
+        }
+
+        // Rest of the existing lighting/material code...
+        vec3 n = normalize(m);
 
         // object colour
         vec4 material_colour = texture2D(texture, map);
@@ -92,9 +99,15 @@ void main()
                                  0.1 * reflection_colour).rgb, material_colour.a);
         }
         else {
-            // reflection only 
-            gl_FragColor = reflection_colour;
+            if(wireframe_mode) {
+                gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0); // Grey color for wireframe
+            } else {
+                // reflection only 
+                gl_FragColor = reflection_colour;
+            }
         }
+
+        gl_FragColor = gamma_transform(material_colour+reflection_colour*0.15,2.0);
 
         // if(render_texture) {
         //     vec4 combined_color = 0.5 * ambient + 
@@ -124,11 +137,11 @@ void main()
     }
 
     // vignette effect
-    //vec2 resolution = vec2(850,850);
+    vec2 resolution = vec2(850,850);
     //gl_FragColor = vec4(1.0);
 
     // scale the final fragment rgb by vignette value
-    //gl_FragColor.rgb *= vignette(gl_FragCoord.xy, resolution);
+    gl_FragColor.rgb *= vignette(gl_FragCoord.xy, resolution);
 
 
 }

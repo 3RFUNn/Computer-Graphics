@@ -5,8 +5,11 @@ const vs_file = './environment-vert.glsl';
 const fs_file = './environment-frag.glsl';
 
 // model parameters
-let model_name = 'sphere';
+let model_name = 'spot';
 let model_path = '../shared/models/';
+
+
+let wireframe_mode = false;
 
 let light = {
     position: [-10.0, 10.0, 10.0, 1.0],
@@ -156,6 +159,9 @@ async function setup(meshes)
                       light[property]);
     }
 
+    // Add after other uniform setups
+    gl.uniform1i(gl.getUniformLocation(program,'wireframe_mode'), wireframe_mode);
+
     // setup skybox
     let cube = vec_scale(10, cube_indices.map(i => cube_vertices[i]).flat());
     cube_buf = gl.createBuffer();
@@ -226,6 +232,19 @@ function render_skybox()
     gl.drawArrays(gl.TRIANGLES, 0, 36);
 }
 
+// function render_object()
+// {
+//     gl.uniform1i(gl.getUniformLocation(program,'render_skybox'), false);
+//     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
+//     gl.vertexAttribPointer(vertex_loc, mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+//     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
+
+//     // D2 MODIFY HERE
+//     gl.drawElements(gl.TRIANGLES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+// }
+
+
 function render_object()
 {
     gl.uniform1i(gl.getUniformLocation(program,'render_skybox'), false);
@@ -234,8 +253,11 @@ function render_object()
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
 
-    // D2 MODIFY HERE
-    gl.drawElements(gl.TRIANGLES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    if(wireframe_mode) {
+        gl.drawElements(gl.LINES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    } else {
+        gl.drawElements(gl.TRIANGLES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    }
 }
 
 async function render() 
@@ -323,6 +345,10 @@ function handle_key_down(event)
     if(event.keyCode == 84) { // t for texture
         render_texture = !render_texture;
         gl.uniform1i(gl.getUniformLocation(program,'render_texture'), render_texture);
+    }
+    if(event.keyCode == 87) { // w for wireframe
+        wireframe_mode = !wireframe_mode;
+        gl.uniform1i(gl.getUniformLocation(program,'wireframe_mode'), wireframe_mode);
     }
 
     // log any other keys
