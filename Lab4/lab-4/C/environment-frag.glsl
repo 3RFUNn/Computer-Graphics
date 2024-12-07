@@ -12,15 +12,15 @@ uniform bool render_skybox, render_texture;
 uniform samplerCube cubemap;
 uniform sampler2D texture;
 
+
+uniform vec2 screenSize;
+
 varying vec2 map;
 varying vec3 d, m;
 varying vec4 p, q;
 
 
-
 float vignette(vec2 coord, vec2 resolution) {
-
-    
   // Calculate the distance of the fragment from the center of the image
   vec2 center = resolution / 2.0;
   float dist = distance(coord, center);
@@ -30,6 +30,7 @@ float vignette(vec2 coord, vec2 resolution) {
   vignetteFactor = clamp(vignetteFactor, 0.6, 0.95);
   return vignetteFactor;
 }
+
 
 
 vec4 gamma_transform(vec4 colour, float gamma)
@@ -95,12 +96,25 @@ void main()
             gl_FragColor = reflection_colour;
         }
 
+        
 
         // if(gl_FragCoord.x > 425.0) {
 
         //     gl_FragColor = gamma_transform(material_colour+reflection_colour*0.1,2.0);   
         // }
 
+
+        
+
     }
+
+    // vignette effect
+    vec2 resolution = vec2(850,850);
+    //gl_FragColor = vec4(1.0);
+
+    // scale the final fragment rgb by vignette value
+    gl_FragColor.rgb *= vignette(gl_FragCoord.xy, resolution);
+
+
 }
 
