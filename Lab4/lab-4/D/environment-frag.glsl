@@ -96,12 +96,27 @@ void main()
             gl_FragColor = reflection_colour;
         }
 
+        // if(render_texture) {
+        //     vec4 combined_color = 0.5 * ambient + 
+        //                  0.5 * diffuse + 
+        //                  0.01 * specular + 
+        //                  0.1 * gamma_transform(reflection_colour, 2.2);
+        //     gl_FragColor = vec4(combined_color.rgb, material_colour.a);
+        // }
+        // else {
+        //     // reflection only - apply gamma correction
+        //     gl_FragColor = gamma_transform(reflection_colour, 2.2);
+        // }
+
         
 
         // if(gl_FragCoord.x > 425.0) {
 
         //     gl_FragColor = gamma_transform(material_colour+reflection_colour*0.1,2.0);   
         // }
+
+
+        
 
 
         
